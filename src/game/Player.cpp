@@ -5893,6 +5893,9 @@ void Player::CheckAreaExploreAndOutdoor()
                     XP = uint32(sObjectMgr.GetBaseXP(p->area_level) * sWorld.getConfig(CONFIG_FLOAT_RATE_XP_EXPLORE));
                 }
 
+                // PREMIUM: Erkunden Rate
+                if(GetSession()->IsPremium())
+                XP *= sWorld.getConfig(CONFIG_FLOAT_RATE_XP_EXPLORE_PREMIUM);
                 GiveXP(XP, NULL);
                 SendExplorationExperience(area, XP);
             }
@@ -7724,6 +7727,9 @@ void Player::SendLoot(ObjectGuid guid, LootType loot_type)
                         loot->FillLoot(lootid, LootTemplates_Creature, recipient, false);
 
                     loot->generateMoneyLoot(creature->GetCreatureInfo()->mingold, creature->GetCreatureInfo()->maxgold);
+                    // PREMIUM: Loot Gold Rate
+                    if (GetSession()->IsPremium())
+                    loot->generateMoneyLoot(creature->GetCreatureInfo()->mingold, creature->GetCreatureInfo()->maxgold * sWorld.getConfig(CONFIG_FLOAT_RATE_DROP_MONEY_PREMIUM));
 
                     if (Group* group = creature->GetGroupLootRecipient())
                     {
@@ -13271,6 +13277,9 @@ void Player::RewardQuest(Quest const* pQuest, uint32 reward, Object* questGiver,
 
     // Used for client inform but rewarded only in case not max level
     uint32 xp = uint32(pQuest->XPValue(this) * sWorld.getConfig(CONFIG_FLOAT_RATE_XP_QUEST));
+    // PREMIUM: Quest XP Rate 
+    if (GetSession()->IsPremium())
+        xp = uint32(pQuest->XPValue(this) * sWorld.getConfig(CONFIG_FLOAT_RATE_XP_QUEST_PREMIUM));
 
     if (getLevel() < sWorld.getConfig(CONFIG_UINT32_MAX_PLAYER_LEVEL))
         GiveXP(xp , NULL);
@@ -13279,7 +13288,9 @@ void Player::RewardQuest(Quest const* pQuest, uint32 reward, Object* questGiver,
 
     // Give player extra money if GetRewOrReqMoney > 0 and get ReqMoney if negative
     ModifyMoney(pQuest->GetRewOrReqMoney());
-
+        // PREMIUM: Quest Gold Rate
+        if (GetSession()->IsPremium())
+            ModifyMoney(pQuest->GetRewOrReqMoney() * sWorld.getConfig(CONFIG_FLOAT_RATE_DROP_MONEY_PREMIUM));
     // honor reward
     if (pQuest->GetRewHonorableKills())
         RewardHonor(NULL, 0, MaNGOS::Honor::hk_honor_at_level(getLevel(), pQuest->GetRewHonorableKills()));

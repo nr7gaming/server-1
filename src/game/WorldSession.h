@@ -147,7 +147,7 @@ class MANGOS_DLL_SPEC WorldSession
 {
     friend class CharacterHandler;
 public:
-    WorldSession(uint32 id, WorldSocket* sock, AccountTypes sec, uint8 expansion, time_t mute_time, LocaleConstant locale);
+    WorldSession(uint32 id, WorldSocket* sock, AccountTypes sec, bool ispremium, uint8 expansion, time_t mute_time, LocaleConstant locale);
     ~WorldSession();
 
     bool PlayerLoading() const { return m_playerLoading; }
@@ -166,6 +166,7 @@ public:
     void SendQueryTimeResponse();
 
     AccountTypes GetSecurity() const { return _security; }
+    bool IsPremium() const { return _ispremium; }
     uint32 GetAccountId() const { return _accountId; }
     Player* GetPlayer() const { return _player; }
     char const* GetPlayerName() const;
@@ -760,6 +761,7 @@ private:
     AccountTypes _security;
     uint32 _accountId;
     uint8 m_expansion;
+    bool _ispremium;
 
     // Warden
     WardenBase *m_Warden;
