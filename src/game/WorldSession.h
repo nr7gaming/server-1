@@ -146,6 +146,7 @@ public:
 class MANGOS_DLL_SPEC WorldSession
 {
     friend class CharacterHandler;
+
 public:
     WorldSession(uint32 id, WorldSocket* sock, AccountTypes sec, bool ispremium, uint8 expansion, time_t mute_time, LocaleConstant locale);
     ~WorldSession();
@@ -309,6 +310,10 @@ public:
     uint32 GetLatency() const { return m_latency; }
     void SetLatency(uint32 latency) { m_latency = latency; }
     uint32 getDialogStatus(Player* pPlayer, Object* questgiver, uint32 defstatus);
+
+    // Misc;
+    void SendPlaySpellVisual(ObjectGuid guid, uint32 spellArtKit);
+    void SendItemPageInfo(ItemPrototype* itemProto);
 
 public:                                                 // opcodes handlers
 
@@ -491,6 +496,7 @@ public:                                                 // opcodes handlers
     void HandleBuyBankSlotOpcode(WorldPacket& recvPacket);
     void HandleTrainerListOpcode(WorldPacket& recvPacket);
     void HandleTrainerBuySpellOpcode(WorldPacket& recvPacket);
+
     void HandlePetitionShowListOpcode(WorldPacket& recvPacket);
     void HandleGossipHelloOpcode(WorldPacket& recvPacket);
     void HandleGossipSelectOptionOpcode(WorldPacket& recvPacket);
@@ -541,7 +547,6 @@ public:                                                 // opcodes handlers
     void HandleQueryNextMailTime(WorldPacket& recv_data);
     void HandleCancelChanneling(WorldPacket& recv_data);
 
-    void SendItemPageInfo(ItemPrototype* itemProto);
     void HandleSplitItemOpcode(WorldPacket& recvPacket);
     void HandleSwapInvItemOpcode(WorldPacket& recvPacket);
     void HandleDestroyItemOpcode(WorldPacket& recvPacket);
